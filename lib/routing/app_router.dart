@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:radio_guide/pages/favorites_screen.dart';
 import 'package:radio_guide/pages/list_of_channels_screen.dart';
 import 'package:radio_guide/pages/list_of_programs_screen.dart';
 import 'package:radio_guide/pages/start_page.dart';
@@ -26,6 +27,11 @@ final GoRouter router = GoRouter(
               name: AppRoutes.programs.name,
               builder: (BuildContext context, GoRouterState state) =>
                   ListOfProgramsScreen(channel: state.extra as int),
+            ),
+            GoRoute(
+              path: 'favorites',
+              name: AppRoutes.favorites.name,
+              builder: (BuildContext context, GoRouterState state) => FavoriteScreen(),
             ),
           ],
         ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:radio_guide/constants/app_colors.dart';
+import 'package:radio_guide/constants/fallbacks.dart';
+import 'package:radio_guide/routing/app_routes.dart';
 import 'package:radio_guide/sr_api_services.dart';
 
 class ListOfProgramsScreen extends StatefulWidget {
@@ -12,7 +15,7 @@ class ListOfProgramsScreen extends StatefulWidget {
 
 class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
   List<dynamic>? programs = [];
-  ApiController apiController = ApiController();
+  ApiServices apiController = ApiServices();
 
   @override
   void initState() {
@@ -44,10 +47,12 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String fallbackImage =
-        "https://static-cdn.sr.se/images/1650/9c660750-b6c3-438a-a64f-e236162dd086.jpg?preset=api-default-square";
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          "Tablå",
+          style: TextStyle(color: AppColors.additional),
+        ),
         backgroundColor: AppColors.transparent,
         shadowColor: AppColors.transparent,
         leading: const BackButton(
@@ -59,11 +64,11 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
         itemCount: programs!.length,
         itemBuilder: (BuildContext contect, int index) {
           return ListTile(
-            leading: Image.network(programs?[index]['imageurl'] ?? fallbackImage),
+            leading: Image.network(programs?[index]['imageurl'] ?? Fallbacks.fallbackImage),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(programs?[index]['title'] ?? "Nothing found"),
+                Text(programs?[index]['title'] ?? Fallbacks.nothingFound),
                 _buildTotalTimeText(index: index, end: 'endtimeutc', start: 'starttimeutc')
               ],
             ),
@@ -107,7 +112,11 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
   Widget _buildFAB({required IconData icon}) {
     return FloatingActionButton(
       heroTag: null,
-      onPressed: () {},
+      onPressed: () {
+        if (icon == Icons.heart_broken) {
+          context.goNamed(AppRoutes.favorites.name);
+        } else {}
+      },
       backgroundColor: AppColors.secondary,
       child: Icon(icon),
     );
