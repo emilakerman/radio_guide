@@ -36,47 +36,58 @@ class _ChannelListState extends State<ChannelList> {
 
   @override
   Widget build(BuildContext context) {
+    bool isOnChannelPage =
+        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath == '/channels';
+    print(isOnChannelPage);
     return ListView.separated(
       itemCount: widget.channels!.length,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
           leading: Image.network(widget.channels?[index]['image'] ?? Fallbacks.fallbackImage),
-          onTap: () {
-            if (channelListController.saveOrDelete(
-                index: index, widget: widget, localStorage: localStorage)) {
-              setState(() {
-                channelListController.updateList(localStorage, widget);
-              });
-            }
-          },
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
                 child: Text(widget.channels?[index]['name'] ?? Fallbacks.nothingFound),
               ),
-              isPlaying
-                  ? _buildIconButton(
-                      isStopFeature: true,
-                      index: index,
-                      icon: Icons.stop,
-                      isStop: false,
-                    )
-                  : _buildIconButton(
-                      isStopFeature: false,
-                      index: index,
-                      icon: Icons.play_circle,
-                      isStop: true,
-                    ),
+              _buildIconButton(
+                index: index,
+                icon: isPlaying ? Icons.stop : Icons.play_circle,
+                onPressed: () {
+                  if (isPlaying) {
+                    player.stop();
+                  } else {
+                    channelListController.playAudio(
+                      widget.channels?[index]['liveaudio']['url'],
+                      player,
+                    );
+                  }
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                },
+              ),
+              _buildIconButton(
+                index: index,
+                icon: isOnChannelPage ? Icons.favorite : Icons.favorite_border_sharp,
+                onPressed: () {
+                  if (channelListController.saveOrDelete(
+                      index: index, widget: widget, localStorage: localStorage)) {
+                    setState(() {
+                      channelListController.updateList(localStorage, widget);
+                    });
+                  }
+                },
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.info,
+                  color: AppColors.secondary,
+                ),
+                onPressed: () =>
+                    context.goNamed(AppRoutes.programs.name, extra: widget.channels?[index]['id']),
+              ),
             ],
-          ),
-          trailing: IconButton(
-            icon: const Icon(
-              Icons.info,
-              color: AppColors.secondary,
-            ),
-            onPressed: () =>
-                context.goNamed(AppRoutes.programs.name, extra: widget.channels?[index]['id']),
           ),
         );
       },
@@ -85,24 +96,12 @@ class _ChannelListState extends State<ChannelList> {
   }
 
   Widget _buildIconButton({
-    bool? isStopFeature,
     required int index,
     required IconData icon,
-    bool? isStop,
+    required Function() onPressed,
   }) {
-    bool isStopFeatureNotNull = isStopFeature != null;
     return IconButton(
-      onPressed: () {
-        if (isStopFeatureNotNull && isStopFeature == true) {
-          player.stop();
-        } else if (isStopFeatureNotNull && isStopFeature == false) {
-          channelListController.playAudio(
-            widget.channels?[index]['liveaudio']['url'],
-            player,
-          );
-        }
-        setState(() => isPlaying = isStop!);
-      },
+      onPressed: onPressed,
       icon: Icon(
         icon,
         color: AppColors.secondary,
