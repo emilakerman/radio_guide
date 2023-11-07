@@ -6,7 +6,7 @@ import 'package:radio_guide/constants/fallbacks.dart';
 import 'package:radio_guide/controllers/channel_list_controller.dart';
 import 'package:radio_guide/routing/app_routes.dart';
 import 'package:radio_guide/shared_preferences.dart';
-import 'package:radio_guide/widgets/snackbars.dart';
+import 'package:radio_guide/widgets/global_snackbar.dart';
 
 class ChannelList extends StatefulWidget {
   ChannelList({super.key, required this.channels, required this.isFavorite});
