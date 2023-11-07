@@ -6,6 +6,7 @@ import 'package:radio_guide/constants/fallbacks.dart';
 import 'package:radio_guide/controllers/channel_list_controller.dart';
 import 'package:radio_guide/routing/app_routes.dart';
 import 'package:radio_guide/shared_preferences.dart';
+import 'package:radio_guide/widgets/snackbars.dart';
 
 class ChannelList extends StatefulWidget {
   ChannelList({super.key, required this.channels, required this.isFavorite});
@@ -38,7 +39,6 @@ class _ChannelListState extends State<ChannelList> {
   Widget build(BuildContext context) {
     bool isOnChannelPage =
         GoRouter.of(context).routerDelegate.currentConfiguration.fullPath == '/channels';
-    print(isOnChannelPage);
     return ListView.separated(
       itemCount: widget.channels!.length,
       itemBuilder: (BuildContext context, int index) {
@@ -71,6 +71,7 @@ class _ChannelListState extends State<ChannelList> {
                 index: index,
                 icon: isOnChannelPage ? Icons.favorite : Icons.favorite_border_sharp,
                 onPressed: () {
+                  GlobalSnackBar.show(context, isOnChannelPage);
                   if (channelListController.saveOrDelete(
                       index: index, widget: widget, localStorage: localStorage)) {
                     setState(() {
