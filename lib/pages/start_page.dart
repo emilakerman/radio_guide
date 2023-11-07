@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:radio_guide/constants/app_colors.dart';
 import 'package:radio_guide/routing/app_routes.dart';
+import 'package:radio_guide/widgets/logo_faded.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -14,12 +15,15 @@ class StartPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox.shrink(),
+            const SizedBox.shrink(),
             Container(
-              color: AppColors.secondary,
-              child: const Image(
-                image: AssetImage("assets/images/sr.png"),
+              decoration: const BoxDecoration(
+                color: AppColors.secondary,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(50),
+                ),
               ),
+              child: AnimatedLogo(),
             ),
             const Padding(
               padding: EdgeInsets.only(left: 25),

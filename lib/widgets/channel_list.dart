@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:radio_guide/constants/app_colors.dart';
 import 'package:radio_guide/constants/fallbacks.dart';
@@ -50,22 +51,27 @@ class _ChannelListState extends State<ChannelList> {
               Expanded(
                 child: Text(widget.channels?[index]['name'] ?? Fallbacks.nothingFound),
               ),
-              _buildIconButton(
-                index: index,
-                icon: isPlaying ? Icons.stop : Icons.play_circle,
-                onPressed: () {
-                  if (isPlaying) {
-                    player.stop();
-                  } else {
-                    channelListController.playAudio(
-                      widget.channels?[index]['liveaudio']['url'],
-                      player,
-                    );
-                  }
-                  setState(() {
-                    isPlaying = !isPlaying;
-                  });
-                },
+              Consumer(
+                builder: (context, ref, child) => _buildIconButton(
+                  index: index,
+                  icon: Icons.play_circle,
+                  url: widget.channels?[index]['liveaudio']['url'],
+                  ref: ref,
+                  onPressed: () {
+                    if (isPlaying) {
+                      ref.read(currentURLProvider.notifier).state = "";
+                      player.stop();
+                    } else {
+                      channelListController.playAudio(
+                        widget.channels?[index]['liveaudio']['url'],
+                        player,
+                      );
+                      ref.read(currentURLProvider.notifier).state =
+                          widget.channels?[index]['liveaudio']['url'];
+                    }
+                    setState(() => isPlaying = !isPlaying);
+                  },
+                ),
               ),
               _buildIconButton(
                 index: index,
@@ -98,9 +104,16 @@ class _ChannelListState extends State<ChannelList> {
 
   Widget _buildIconButton({
     required int index,
-    required IconData icon,
     required Function() onPressed,
+    required IconData icon,
+    String? url,
+    WidgetRef? ref,
   }) {
+    if (ref != null) {
+      if (url == ref.watch(currentURLProvider.notifier).state) {
+        icon = Icons.stop;
+      }
+    }
     return IconButton(
       onPressed: onPressed,
       icon: Icon(

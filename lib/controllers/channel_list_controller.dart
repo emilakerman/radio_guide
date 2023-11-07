@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_guide/shared_preferences.dart';
 import 'package:radio_guide/widgets/channel_list.dart';
 
@@ -26,3 +27,5 @@ class ChannelListController {
     }
   }
 }
+
+final currentURLProvider = StateProvider<String>((ref) => "");
