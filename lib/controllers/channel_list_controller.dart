@@ -1,9 +1,20 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_guide/shared_preferences.dart';
 import 'package:radio_guide/widgets/channel_list.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class ChannelListController {
+part 'channel_list_controller.g.dart';
+
+@riverpod
+class ChannelListController extends _$ChannelListController {
+  // This is the saved string for the currently playing radio channel.
+  @override
+  String build() => "";
+
+  void setCurrentURL(String url) {
+    state = url;
+  }
+
   void updateList(LocallyStoredData data, ChannelList widget) async {
     widget.channels = await data.readData();
   }
@@ -27,5 +38,3 @@ class ChannelListController {
     }
   }
 }
-
-final currentURLProvider = StateProvider<String>((ref) => "");

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:radio_guide/constants/app_colors.dart';
+import 'package:radio_guide/constants/app_sizes.dart';
 import 'package:radio_guide/constants/fallbacks.dart';
 import 'package:radio_guide/controllers/channel_list_controller.dart';
 import 'package:radio_guide/routing/app_routes.dart';
@@ -59,15 +60,16 @@ class _ChannelListState extends State<ChannelList> {
                   ref: ref,
                   onPressed: () {
                     if (isPlaying) {
-                      ref.read(currentURLProvider.notifier).state = "";
+                      ref.read(channelListControllerProvider.notifier).setCurrentURL("");
                       player.stop();
                     } else {
                       channelListController.playAudio(
                         widget.channels?[index]['liveaudio']['url'],
                         player,
                       );
-                      ref.read(currentURLProvider.notifier).state =
-                          widget.channels?[index]['liveaudio']['url'];
+                      ref
+                          .read(channelListControllerProvider.notifier)
+                          .setCurrentURL(widget.channels?[index]['liveaudio']['url']);
                     }
                     setState(() => isPlaying = !isPlaying);
                   },
@@ -98,7 +100,7 @@ class _ChannelListState extends State<ChannelList> {
           ),
         );
       },
-      separatorBuilder: (context, index) => const Divider(height: 8),
+      separatorBuilder: (context, index) => const Divider(height: Sizes.p8),
     );
   }
 
@@ -110,7 +112,7 @@ class _ChannelListState extends State<ChannelList> {
     WidgetRef? ref,
   }) {
     if (ref != null) {
-      if (url == ref.watch(currentURLProvider.notifier).state) {
+      if (url == ref.watch(channelListControllerProvider)) {
         icon = Icons.stop;
       }
     }
