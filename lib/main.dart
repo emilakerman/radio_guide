@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:radio_guide/routing/app_router.dart';
 
 void main() {
@@ -12,11 +13,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router,
-
-      // home: Scaffold(
-      //   backgroundColor: AppColors.primary,
-      //   body: StartPage(),
-      // ),
+      theme: ThemeData(
+        textTheme: TextTheme(
+          displayLarge: const TextStyle(
+            fontSize: 72,
+            fontWeight: FontWeight.bold,
+          ),
+          titleLarge: GoogleFonts.alatsi(
+            fontSize: 22,
+          ),
+          bodyMedium: GoogleFonts.merriweather(),
+          displaySmall: GoogleFonts.pacifico(),
+        ),
+      ),
     );
   }
 }
