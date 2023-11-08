@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:radio_guide/constants/app_colors.dart';
-import 'package:radio_guide/constants/fallbacks.dart';
 import 'package:radio_guide/routing/app_routes.dart';
 import 'package:radio_guide/sr_api_services.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -47,7 +46,7 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Radiokanaler",
           style: TextStyle(color: AppColors.additional),
         ),

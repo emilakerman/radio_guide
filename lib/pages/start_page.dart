@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:radio_guide/constants/app_colors.dart';
 import 'package:radio_guide/constants/app_sizes.dart';
+import 'package:radio_guide/controllers/start_page_controller.dart';
 import 'package:radio_guide/routing/app_routes.dart';
 import 'package:radio_guide/widgets/logo_faded.dart';
 
@@ -24,7 +26,7 @@ class StartPage extends StatelessWidget {
                   Radius.circular(50),
                 ),
               ),
-              child: AnimatedLogo(),
+              child: const AnimatedLogo(),
             ),
             const Padding(
               padding: EdgeInsets.only(left: Sizes.p24),
@@ -74,34 +76,48 @@ class StartPage extends StatelessWidget {
   }
 
   Widget _buildIconCollection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        const Image(
-            width: Sizes.p88, height: Sizes.p88, image: AssetImage("assets/images/arrow_down.png")),
-        Column(
+    return Consumer(
+      builder: (_, ref, __) {
+        Widget buildRandomStarIcon() {
+          return _buildStarIcon(
+            color: ref.read(startPageControllerProvider.notifier).randomizeColor(),
+          );
+        }
+
+        ref.watch(startPageControllerProvider);
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildStarIcon(color: AppColors.additional),
-            gapH80,
-            _buildStarIcon(color: AppColors.secondary),
+            const Image(
+              width: Sizes.p88,
+              height: Sizes.p88,
+              image: AssetImage("assets/images/arrow_down.png"),
+            ),
+            Column(
+              children: [
+                buildRandomStarIcon(),
+                gapH80,
+                buildRandomStarIcon(),
+              ],
+            ),
+            Column(
+              children: [
+                buildRandomStarIcon(),
+                gapH16,
+                buildRandomStarIcon(),
+                gapH8,
+                buildRandomStarIcon(),
+              ],
+            ),
+            Column(
+              children: [
+                gapH4,
+                buildRandomStarIcon(),
+              ],
+            ),
           ],
-        ),
-        Column(
-          children: [
-            _buildStarIcon(color: AppColors.secondary),
-            gapH16,
-            _buildStarIcon(color: AppColors.complement),
-            gapH8,
-            _buildStarIcon(color: AppColors.additional),
-          ],
-        ),
-        Column(
-          children: [
-            gapH4,
-            _buildStarIcon(color: AppColors.complement),
-          ],
-        ),
-      ],
+        );
+      },
     );
   }
 
