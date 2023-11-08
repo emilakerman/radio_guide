@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:radio_guide/routing/app_router.dart';
 
 void main() {
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

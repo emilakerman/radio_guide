@@ -15,12 +15,12 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/',
       name: AppRoutes.root.name,
-      builder: (BuildContext context, GoRouterState state) => StartPage(),
+      builder: (BuildContext context, GoRouterState state) => const StartPage(),
       routes: [
         GoRoute(
           path: 'channels',
           name: AppRoutes.channels.name,
-          builder: (BuildContext context, GoRouterState state) => ListOfChannelsScreen(),
+          builder: (BuildContext context, GoRouterState state) => const ListOfChannelsScreen(),
           routes: [
             GoRoute(
               path: 'programs',
@@ -31,7 +31,7 @@ final GoRouter router = GoRouter(
             GoRoute(
               path: 'favorites',
               name: AppRoutes.favorites.name,
-              builder: (BuildContext context, GoRouterState state) => FavoriteScreen(),
+              builder: (BuildContext context, GoRouterState state) => const FavoriteScreen(),
             ),
           ],
         ),

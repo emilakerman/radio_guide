@@ -8,4 +8,10 @@ class AppColors {
   static const white = Colors.white;
   static const black = Colors.black;
   static const transparent = Colors.transparent;
+
+  static final colorList = [
+    AppColors.secondary,
+    AppColors.complement,
+    AppColors.additional,
+  ];
 }

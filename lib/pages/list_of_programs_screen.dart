@@ -49,7 +49,7 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Tablå",
           style: TextStyle(color: AppColors.additional),
         ),
