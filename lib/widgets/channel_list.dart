@@ -41,6 +41,7 @@ class _ChannelListState extends State<ChannelList> {
   Widget build(BuildContext context) {
     bool isOnChannelPage =
         GoRouter.of(context).routerDelegate.currentConfiguration.fullPath == '/channels';
+
     return ListView.separated(
       physics: const BouncingScrollPhysics(),
       itemCount: widget.channels!.length,
@@ -54,48 +55,69 @@ class _ChannelListState extends State<ChannelList> {
                 child: Text(widget.channels?[index]['name'] ?? Fallbacks.nothingFound),
               ),
               Consumer(
-                builder: (context, ref, child) => _buildIconButton(
-                  index: index,
-                  icon: Icons.play_circle,
-                  url: widget.channels?[index]['liveaudio']['url'],
-                  ref: ref,
-                  onPressed: () {
-                    if (isPlaying) {
-                      ref.read(channelListControllerProvider.notifier).setCurrentURL("");
-                      player.stop();
-                    } else {
-                      channelListController.playAudio(
-                        widget.channels?[index]['liveaudio']['url'],
-                        player,
-                      );
-                      ref
-                          .read(channelListControllerProvider.notifier)
-                          .setCurrentURL(widget.channels?[index]['liveaudio']['url']);
-                    }
-                    setState(() => isPlaying = !isPlaying);
-                  },
-                ),
-              ),
-              _buildIconButton(
-                index: index,
-                icon: isOnChannelPage ? Icons.favorite : Icons.favorite_border_sharp,
-                onPressed: () {
-                  GlobalSnackBar.show(context, isOnChannelPage);
-                  if (channelListController.saveOrDelete(
-                      index: index, widget: widget, localStorage: localStorage)) {
-                    setState(() {
-                      channelListController.updateList(localStorage, widget);
-                    });
-                  }
+                builder: (_, ref, __) {
+                  return ref.watch(sideButtonsControllerProvider)
+                      ? Row(
+                          children: [
+                            Consumer(
+                              builder: (context, ref, child) => _buildIconButton(
+                                index: index,
+                                icon: Icons.play_circle,
+                                url: widget.channels?[index]['liveaudio']['url'],
+                                ref: ref,
+                                onPressed: () {
+                                  if (isPlaying) {
+                                    ref
+                                        .read(channelListControllerProvider.notifier)
+                                        .setCurrentURL("");
+                                    player.stop();
+                                  } else {
+                                    channelListController.playAudio(
+                                      widget.channels?[index]['liveaudio']['url'],
+                                      player,
+                                    );
+                                    ref
+                                        .read(channelListControllerProvider.notifier)
+                                        .setCurrentURL(widget.channels?[index]['liveaudio']['url']);
+                                  }
+                                  setState(() => isPlaying = !isPlaying);
+                                },
+                              ),
+                            ),
+                            _buildIconButton(
+                              index: index,
+                              icon: isOnChannelPage ? Icons.favorite : Icons.favorite_border_sharp,
+                              onPressed: () {
+                                GlobalSnackBar.show(context, isOnChannelPage);
+                                if (channelListController.saveOrDelete(
+                                    index: index, widget: widget, localStorage: localStorage)) {
+                                  setState(() {
+                                    channelListController.updateList(localStorage, widget);
+                                  });
+                                }
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.info,
+                                color: AppColors.secondary,
+                              ),
+                              onPressed: () => context.goNamed(AppRoutes.programs.name,
+                                  extra: widget.channels?[index]['id']),
+                            ),
+                            IconButton(
+                              onPressed: () =>
+                                  ref.read(sideButtonsControllerProvider.notifier).reverseBool(),
+                              icon: const Icon(Icons.expand_circle_down),
+                            ),
+                          ],
+                        )
+                      : IconButton(
+                          onPressed: () =>
+                              ref.read(sideButtonsControllerProvider.notifier).reverseBool(),
+                          icon: const Icon(Icons.expand_circle_down),
+                        );
                 },
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.info,
-                  color: AppColors.secondary,
-                ),
-                onPressed: () =>
-                    context.goNamed(AppRoutes.programs.name, extra: widget.channels?[index]['id']),
               ),
             ],
           ),
