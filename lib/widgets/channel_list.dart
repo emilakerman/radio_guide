@@ -42,6 +42,7 @@ class _ChannelListState extends State<ChannelList> {
     bool isOnChannelPage =
         GoRouter.of(context).routerDelegate.currentConfiguration.fullPath == '/channels';
     return ListView.separated(
+      physics: const BouncingScrollPhysics(),
       itemCount: widget.channels!.length,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
