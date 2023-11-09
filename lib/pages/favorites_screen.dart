@@ -3,6 +3,7 @@ import 'package:radio_guide/constants/app_colors.dart';
 import 'package:radio_guide/shared_preferences.dart';
 import 'package:radio_guide/sr_api_services.dart';
 import 'package:radio_guide/widgets/channel_list.dart';
+import 'package:radio_guide/widgets/floating_action_buttons.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -46,6 +47,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         channels: convertedList,
         isFavorite: true,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: buildFABRow(context: context),
     );
   }
 }
