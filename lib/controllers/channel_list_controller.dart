@@ -38,3 +38,15 @@ class ChannelListController extends _$ChannelListController {
     }
   }
 }
+
+@riverpod
+class SearchbarController extends _$SearchbarController {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void reverseBool() {
+    state = !state;
+  }
+}

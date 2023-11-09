@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_guide/constants/app_colors.dart';
+import 'package:radio_guide/controllers/channel_list_controller.dart';
 import 'package:radio_guide/sr_api_services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:radio_guide/widgets/channel_list.dart';
@@ -16,9 +18,12 @@ class ListOfChannelsScreen extends StatefulWidget {
 class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
   List<dynamic>? channels = [];
   ApiServices apiController = ApiServices();
+  TextEditingController editingController = TextEditingController();
+
   late AudioPlayer player;
   bool isPlaying = false;
   bool _isLoading = true;
+  bool showSearchBar = false;
 
   @override
   void initState() {
@@ -47,13 +52,29 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
     await player.play(UrlSource(url));
   }
 
+  void filterSearchResults(String query) async {
+    List<dynamic>? duplicateItems = await apiController.fetchChannels();
+    setState(() {
+      channels = duplicateItems?.where((item) {
+        if (item is Map<String, dynamic> && item.containsKey("name")) {
+          return item["name"].toString().toLowerCase().contains(query.toLowerCase()) ? true : false;
+        }
+        return false;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Radiokanaler",
-          style: TextStyle(color: AppColors.additional),
+        title: Consumer(
+          builder: (_, ref, __) => ref.watch(searchbarControllerProvider)
+              ? _buildTextField()
+              : const Text(
+                  "Radiokanaler",
+                  style: TextStyle(color: AppColors.additional),
+                ),
         ),
         backgroundColor: AppColors.transparent,
         shadowColor: AppColors.transparent,
@@ -63,13 +84,27 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
       ),
       backgroundColor: AppColors.primary,
       body: _isLoading
-          ? CircularProgressWidget()
+          ? const CircularProgressWidget()
           : ChannelList(
               channels: channels,
               isFavorite: false,
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: buildFABRow(context: context),
+    );
+  }
+
+  Widget _buildTextField() {
+    return TextField(
+      onChanged: (String value) {
+        filterSearchResults(value);
+      },
+      controller: editingController,
+      decoration: const InputDecoration(
+        labelText: "Sök här",
+        suffixIcon: Icon(Icons.search),
+        suffixIconColor: AppColors.secondary,
+      ),
     );
   }
 }
