@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:radio_guide/constants/app_colors.dart';
 import 'package:radio_guide/constants/fallbacks.dart';
-import 'package:radio_guide/routing/app_routes.dart';
 import 'package:radio_guide/sr_api_services.dart';
+import 'package:radio_guide/widgets/circular_progress_widget.dart';
+import 'package:radio_guide/widgets/floating_action_buttons.dart';
 
 class ListOfProgramsScreen extends StatefulWidget {
   const ListOfProgramsScreen({super.key, required this.channel});
@@ -16,16 +16,33 @@ class ListOfProgramsScreen extends StatefulWidget {
 class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
   List<dynamic>? programs = [];
   ApiServices apiController = ApiServices();
+  bool _isLoading = true;
 
   @override
   void initState() {
     fetchData();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        fetchNextDayAndCombine();
+      }
+    });
     super.initState();
   }
 
+  void fetchNextDayAndCombine() async {
+    List<dynamic>? listNextDay = await apiController.fetchNextDayPrograms(widget.channel);
+    setState(() {
+      programs = [...?programs, ...?listNextDay];
+    });
+  }
+
   void fetchData() async {
+    setState(() => _isLoading = true);
     List<dynamic>? list = await apiController.fetchPrograms(widget.channel);
-    setState(() => programs = list);
+    setState(() {
+      programs = list;
+      _isLoading = false;
+    });
   }
 
   String? extractTime(String timeStamp) {
@@ -45,6 +62,8 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
     return null;
   }
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,36 +79,37 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
         ),
       ),
       backgroundColor: AppColors.primary,
-      body: ListView.separated(
-        itemCount: programs!.length,
-        itemBuilder: (BuildContext contect, int index) {
-          return ListTile(
-            leading: Image.network(programs?[index]['imageurl'] ?? Fallbacks.fallbackImage),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(programs?[index]['title'] ?? Fallbacks.nothingFound),
-                _buildTotalTimeText(index: index, end: 'endtimeutc', start: 'starttimeutc')
-              ],
+      body: _isLoading
+          ? const CircularProgressWidget()
+          : ListView.separated(
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(),
+              itemCount: programs!.length,
+              itemBuilder: (BuildContext contect, int index) {
+                return ListTile(
+                  leading: Image.network(programs?[index]['imageurl'] ?? Fallbacks.fallbackImage),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(programs?[index]['title'] ?? Fallbacks.nothingFound),
+                      _buildTotalTimeText(index: index, end: 'endtimeutc', start: 'starttimeutc')
+                    ],
+                  ),
+                  trailing: _buildTimeText(index: index, startOrEnd: 'starttimeutc'),
+                );
+              },
+              separatorBuilder: (context, index) => const Divider(height: 8),
             ),
-            trailing: _buildTimeText(index: index, startOrEnd: 'starttimeutc'),
-          );
-        },
-        separatorBuilder: (context, index) => const Divider(height: 8),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildFAB(icon: Icons.list_sharp),
-          _buildFAB(icon: Icons.heart_broken),
-          _buildFAB(icon: Icons.search),
-        ],
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: buildFABRow(context: context),
     );
   }
 
-  Widget _buildTotalTimeText({required int index, required String start, required String end}) {
+  Widget _buildTotalTimeText({
+    required int index,
+    required String start,
+    required String end,
+  }) {
     String totalTime = calculateDifference(
         start: extractTime(programs?[index]['starttimeutc'])
             .toString()
@@ -106,19 +126,6 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
   Widget _buildTimeText({required int index, required String startOrEnd}) {
     return Text(
       [extractTime(programs?[index][startOrEnd])].toString().replaceAll(RegExp(r'[\[\]]'), ''),
-    );
-  }
-
-  Widget _buildFAB({required IconData icon}) {
-    return FloatingActionButton(
-      heroTag: null,
-      onPressed: () {
-        if (icon == Icons.heart_broken) {
-          context.goNamed(AppRoutes.favorites.name);
-        } else {}
-      },
-      backgroundColor: AppColors.secondary,
-      child: Icon(icon),
     );
   }
 }

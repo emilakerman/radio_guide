@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:radio_guide/constants/app_colors.dart';
-import 'package:radio_guide/routing/app_routes.dart';
 import 'package:radio_guide/sr_api_services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:radio_guide/widgets/channel_list.dart';
+import 'package:radio_guide/widgets/circular_progress_widget.dart';
+import 'package:radio_guide/widgets/floating_action_buttons.dart';
 
 class ListOfChannelsScreen extends StatefulWidget {
   const ListOfChannelsScreen({super.key});
@@ -18,6 +18,7 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
   ApiServices apiController = ApiServices();
   late AudioPlayer player;
   bool isPlaying = false;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -33,8 +34,12 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
   }
 
   void fetchData() async {
+    setState(() => _isLoading = true);
     List<dynamic>? list = await apiController.fetchChannels();
-    setState(() => channels = list);
+    setState(() {
+      channels = list;
+      _isLoading = false;
+    });
   }
 
   void playAudio(String url) async {
@@ -57,32 +62,14 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
         ),
       ),
       backgroundColor: AppColors.primary,
-      body: ChannelList(
-        channels: channels,
-        isFavorite: false,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildFAB(icon: Icons.list_sharp),
-          _buildFAB(icon: Icons.heart_broken),
-          _buildFAB(icon: Icons.search),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFAB({required IconData icon}) {
-    return FloatingActionButton(
-      heroTag: null,
-      onPressed: () {
-        if (icon == Icons.heart_broken) {
-          context.goNamed(AppRoutes.favorites.name);
-        } else {}
-      },
-      backgroundColor: AppColors.secondary,
-      child: Icon(icon),
+      body: _isLoading
+          ? CircularProgressWidget()
+          : ChannelList(
+              channels: channels,
+              isFavorite: false,
+            ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: buildFABRow(context: context),
     );
   }
 }
