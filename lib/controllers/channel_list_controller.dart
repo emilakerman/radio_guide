@@ -1,8 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:audioplayers/audioplayers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:radio_guide/shared_preferences.dart';
 import 'package:radio_guide/widgets/channel_list.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 part 'channel_list_controller.g.dart';
 
 @riverpod
@@ -42,11 +42,16 @@ class ChannelListController extends _$ChannelListController {
 @riverpod
 class SearchbarController extends _$SearchbarController {
   @override
-  bool build() {
-    return false;
-  }
+  bool build() => false;
 
-  void reverseBool() {
-    state = !state;
-  }
+  void reverseBool() => state = !state;
+}
+
+@riverpod
+class SideButtonsController extends _$SideButtonsController {
+  // false == 3 buttons not visible
+  @override
+  bool build() => false;
+
+  void reverseBool() => state = !state;
 }
