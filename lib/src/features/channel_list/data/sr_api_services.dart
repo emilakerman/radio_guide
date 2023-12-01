@@ -6,8 +6,8 @@ class ApiServices {
   Dio dio = Dio();
 
   Future<int> fetchTotalPages(int channelID) async {
-    final response =
-        await dio.get('https://api.sr.se/v2/scheduledepisodes?channelid=$channelID&format=json');
+    final response = await dio.get(
+        'https://api.sr.se/v2/scheduledepisodes?channelid=$channelID&format=json');
     return response.data['pagination']['totalpages'];
   }
 
@@ -28,7 +28,8 @@ class ApiServices {
         }
       } else {
         if (kDebugMode) {
-          print('Request for page $page failed with status: ${response.statusCode}');
+          print(
+              'Request for page $page failed with status: ${response.statusCode}');
         }
       }
     }
@@ -48,7 +49,8 @@ class ApiServices {
           }
         } else {
           if (kDebugMode) {
-            print('Request for page $page failed with status: ${response.statusCode}');
+            print(
+                'Request for page $page failed with status: ${response.statusCode}');
           }
         }
       }
@@ -64,7 +66,8 @@ class ApiServices {
     try {
       List<dynamic>? allChannels = [];
       for (int page = 1; page <= 6; page++) {
-        final response = await dio.get('https://api.sr.se/api/v2/channels?format=json&page=$page');
+        final response = await dio
+            .get('https://api.sr.se/api/v2/channels?format=json&page=$page');
         if (response.statusCode == 200) {
           if (response.data['channels'] is List) {
             allChannels.addAll(response.data['channels']);

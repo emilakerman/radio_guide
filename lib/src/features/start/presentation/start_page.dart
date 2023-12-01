@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:radio_guide/constants/app_colors.dart';
-import 'package:radio_guide/constants/app_sizes.dart';
-import 'package:radio_guide/controllers/start_page_controller.dart';
-import 'package:radio_guide/routing/app_routes.dart';
-import 'package:radio_guide/widgets/logo_faded.dart';
+import 'package:radio_guide/src/constants/app_colors.dart';
+import 'package:radio_guide/src/constants/app_sizes.dart';
+import 'package:radio_guide/src/features/start/presentation/start_page_controller.dart';
+import 'package:radio_guide/src/routing/app_routes.dart';
+import 'package:radio_guide/src/common_widgets/logo_faded.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -80,7 +80,8 @@ class StartPage extends StatelessWidget {
       builder: (_, ref, __) {
         Widget buildRandomStarIcon() {
           return _buildStarIcon(
-            color: ref.read(startPageControllerProvider.notifier).randomizeColor(),
+            color:
+                ref.read(startPageControllerProvider.notifier).randomizeColor(),
           );
         }
 

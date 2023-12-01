@@ -18,8 +18,9 @@ class LocallyStoredData {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> savedChannels = prefs.getStringList(key) ?? [];
 
-    List<Map<String, dynamic>> channels =
-        savedChannels.map((channel) => jsonDecode(channel) as Map<String, dynamic>).toList();
+    List<Map<String, dynamic>> channels = savedChannels
+        .map((channel) => jsonDecode(channel) as Map<String, dynamic>)
+        .toList();
 
     return channels;
   }

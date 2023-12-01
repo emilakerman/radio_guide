@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:radio_guide/constants/app_colors.dart';
+import 'package:radio_guide/src/constants/app_colors.dart';
 
 class GlobalSnackBar {
   final bool isAdded;
@@ -15,11 +15,12 @@ class GlobalSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         elevation: 0.0,
-        content: Text(isAdded ? "Added to favorites!" : "Removed from favorites!"),
+        content:
+            Text(isAdded ? "Added to favorites!" : "Removed from favorites!"),
         duration: const Duration(seconds: 2),
         shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
         ),
         backgroundColor: AppColors.additional,
         action: SnackBarAction(
