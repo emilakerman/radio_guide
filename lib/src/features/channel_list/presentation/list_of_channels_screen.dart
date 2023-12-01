@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:radio_guide/constants/app_colors.dart';
-import 'package:radio_guide/controllers/channel_list_controller.dart';
-import 'package:radio_guide/sr_api_services.dart';
+import 'package:radio_guide/src/constants/app_colors.dart';
+import 'package:radio_guide/src/features/channel_list/presentation/channel_list_controller.dart';
+import 'package:radio_guide/src/features/channel_list/data/sr_api_services.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:radio_guide/widgets/channel_list.dart';
-import 'package:radio_guide/widgets/circular_progress_widget.dart';
-import 'package:radio_guide/widgets/floating_action_buttons.dart';
+import 'package:radio_guide/src/common_widgets/channel_list.dart';
+import 'package:radio_guide/src/common_widgets/circular_progress_widget.dart';
+import 'package:radio_guide/src/common_widgets/floating_action_buttons.dart';
 
 class ListOfChannelsScreen extends StatefulWidget {
   const ListOfChannelsScreen({super.key});
@@ -57,7 +57,12 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
     setState(() {
       channels = duplicateItems?.where((item) {
         if (item is Map<String, dynamic> && item.containsKey("name")) {
-          return item["name"].toString().toLowerCase().contains(query.toLowerCase()) ? true : false;
+          return item["name"]
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase())
+              ? true
+              : false;
         }
         return false;
       }).toList();

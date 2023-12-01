@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:radio_guide/constants/app_colors.dart';
-import 'package:radio_guide/controllers/channel_list_controller.dart';
-import 'package:radio_guide/routing/app_routes.dart';
+import 'package:radio_guide/src/constants/app_colors.dart';
+import 'package:radio_guide/src/features/channel_list/presentation/channel_list_controller.dart';
+import 'package:radio_guide/src/routing/app_routes.dart';
 
 Widget buildFABRow({
   required BuildContext context,
   Function? onPressed,
 }) {
   bool isOnFavoritePage =
-      GoRouter.of(context).routerDelegate.currentConfiguration.fullPath == '/channels/favorites';
+      GoRouter.of(context).routerDelegate.currentConfiguration.fullPath ==
+          '/channels/favorites';
   return isOnFavoritePage
       ? Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

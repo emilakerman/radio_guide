@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:radio_guide/constants/app_colors.dart';
-import 'package:radio_guide/constants/fallbacks.dart';
-import 'package:radio_guide/sr_api_services.dart';
-import 'package:radio_guide/widgets/circular_progress_widget.dart';
-import 'package:radio_guide/widgets/floating_action_buttons.dart';
+import 'package:radio_guide/src/constants/app_colors.dart';
+import 'package:radio_guide/src/constants/fallbacks.dart';
+import 'package:radio_guide/src/features/channel_list/data/sr_api_services.dart';
+import 'package:radio_guide/src/common_widgets/circular_progress_widget.dart';
+import 'package:radio_guide/src/common_widgets/floating_action_buttons.dart';
 
 class ListOfProgramsScreen extends StatefulWidget {
   const ListOfProgramsScreen({super.key, required this.channel});
@@ -22,7 +22,8 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
   void initState() {
     fetchData();
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         fetchNextDayAndCombine();
       }
     });
@@ -30,7 +31,8 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
   }
 
   void fetchNextDayAndCombine() async {
-    List<dynamic>? listNextDay = await apiController.fetchNextDayPrograms(widget.channel);
+    List<dynamic>? listNextDay =
+        await apiController.fetchNextDayPrograms(widget.channel);
     setState(() {
       programs = [...?programs, ...?listNextDay];
     });
@@ -54,7 +56,8 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
       final number = int.tryParse(numberString!);
 
       if (number != null) {
-        final dateTime = DateTime.fromMillisecondsSinceEpoch(number, isUtc: true);
+        final dateTime =
+            DateTime.fromMillisecondsSinceEpoch(number, isUtc: true);
 
         return '${dateTime.toLocal().hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
       }
@@ -87,15 +90,20 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
               itemCount: programs!.length,
               itemBuilder: (BuildContext contect, int index) {
                 return ListTile(
-                  leading: Image.network(programs?[index]['imageurl'] ?? Fallbacks.fallbackImage),
+                  leading: Image.network(
+                      programs?[index]['imageurl'] ?? Fallbacks.fallbackImage),
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(programs?[index]['title'] ?? Fallbacks.nothingFound),
-                      _buildTotalTimeText(index: index, end: 'endtimeutc', start: 'starttimeutc')
+                      _buildTotalTimeText(
+                          index: index,
+                          end: 'endtimeutc',
+                          start: 'starttimeutc')
                     ],
                   ),
-                  trailing: _buildTimeText(index: index, startOrEnd: 'starttimeutc'),
+                  trailing:
+                      _buildTimeText(index: index, startOrEnd: 'starttimeutc'),
                 );
               },
               separatorBuilder: (context, index) => const Divider(height: 8),
@@ -125,7 +133,9 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
 
   Widget _buildTimeText({required int index, required String startOrEnd}) {
     return Text(
-      [extractTime(programs?[index][startOrEnd])].toString().replaceAll(RegExp(r'[\[\]]'), ''),
+      [extractTime(programs?[index][startOrEnd])]
+          .toString()
+          .replaceAll(RegExp(r'[\[\]]'), ''),
     );
   }
 }
@@ -155,8 +165,9 @@ String formatDuration(Duration duration) {
   }
 
   String hours = duration.inHours > 0 ? '${duration.inHours} timmar ' : '';
-  String minutes =
-      duration.inMinutes.remainder(60) > 0 ? '${duration.inMinutes.remainder(60)} minuter' : '';
+  String minutes = duration.inMinutes.remainder(60) > 0
+      ? '${duration.inMinutes.remainder(60)} minuter'
+      : '';
 
   return '$hours$minutes';
 }
