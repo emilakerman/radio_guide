@@ -23,7 +23,6 @@ class _ChannelListState extends State<ChannelList> {
   bool isPlaying = false;
   late AudioPlayer player;
   ChannelListController channelListController = ChannelListController();
-  LocallyStoredData localStorage = LocallyStoredData();
 
   @override
   void initState() {
@@ -103,10 +102,12 @@ class _ChannelListState extends State<ChannelList> {
                                 if (channelListController.saveOrDelete(
                                     index: index,
                                     widget: widget,
-                                    localStorage: localStorage)) {
+                                    localStorage:
+                                        ref.watch(localStorageProvider))) {
                                   setState(() {
                                     channelListController.updateList(
-                                        localStorage, widget);
+                                        ref.watch(localStorageProvider),
+                                        widget);
                                   });
                                 }
                               },
