@@ -17,7 +17,7 @@ class ListOfChannelsScreen extends StatefulWidget {
 
 class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
   List<dynamic>? channels = [];
-  ApiServices apiController = ApiServices();
+  SrAPIRepository apiController = SrAPIRepository();
   TextEditingController editingController = TextEditingController();
 
   late AudioPlayer player;

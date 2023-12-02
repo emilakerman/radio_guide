@@ -5,7 +5,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sr_api_services.g.dart';
 
-class ApiServices {
+/// SR API Repository using the Dio dependency. Calls API methods and parses responses.
+class SrAPIRepository {
   Dio dio = Dio();
 
   Future<int> fetchTotalPages(int channelID) async {
@@ -90,6 +91,6 @@ class ApiServices {
 }
 
 @riverpod
-ApiServices apiService(ApiServiceRef ref) {
-  return ApiServices();
+SrAPIRepository apiService(ApiServiceRef ref) {
+  return SrAPIRepository();
 }

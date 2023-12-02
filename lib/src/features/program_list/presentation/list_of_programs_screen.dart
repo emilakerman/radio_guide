@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_guide/src/constants/app_colors.dart';
 import 'package:radio_guide/src/constants/fallbacks.dart';
 import 'package:radio_guide/src/features/channel_list/data/sr_api_services.dart';
@@ -18,7 +17,7 @@ class ListOfProgramsScreen extends StatefulWidget {
 
 class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
   List<dynamic>? programs = [];
-  ApiServices apiController = ApiServices();
+  SrAPIRepository apiController = SrAPIRepository();
   bool _isLoading = true;
 
   @override

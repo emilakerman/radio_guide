@@ -13,7 +13,7 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  ApiServices apiController = ApiServices();
+  SrAPIRepository apiController = SrAPIRepository();
   List<dynamic>? convertedList = [];
 
   @override
