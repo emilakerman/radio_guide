@@ -27,9 +27,9 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
 
   @override
   void initState() {
+    super.initState();
     player = AudioPlayer();
     fetchData();
-    super.initState();
   }
 
   @override

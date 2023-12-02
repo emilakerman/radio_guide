@@ -18,8 +18,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   void initState() {
-    fetchData();
     super.initState();
+    fetchData();
   }
 
   void fetchData() async {

@@ -26,8 +26,8 @@ class _ChannelListState extends State<ChannelList> {
 
   @override
   void initState() {
-    player = AudioPlayer();
     super.initState();
+    player = AudioPlayer();
   }
 
   @override
