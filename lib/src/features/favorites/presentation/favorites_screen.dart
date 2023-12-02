@@ -34,10 +34,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       appBar: AppBar(
         title: const Text(
           "Favoritkanaler",
-          style: TextStyle(color: AppColors.additional),
         ),
-        backgroundColor: AppColors.transparent,
-        shadowColor: AppColors.transparent,
         leading: const BackButton(
           color: AppColors.secondary,
         ),

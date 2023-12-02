@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:radio_guide/src/constants/app_colors.dart';
 import 'package:radio_guide/src/routing/app_router.dart';
 
 void main() {
@@ -26,6 +27,12 @@ class MyApp extends StatelessWidget {
           ),
           bodyMedium: GoogleFonts.merriweather(),
           displaySmall: GoogleFonts.pacifico(),
+        ),
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(color: AppColors.additional, fontSize: 22),
+          centerTitle: true,
+          backgroundColor: AppColors.transparent,
+          shadowColor: AppColors.transparent,
         ),
       ),
     );

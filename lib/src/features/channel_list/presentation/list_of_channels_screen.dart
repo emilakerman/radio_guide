@@ -78,11 +78,8 @@ class _ListOfChannelsScreenState extends State<ListOfChannelsScreen> {
               ? _buildTextField()
               : const Text(
                   "Radiokanaler",
-                  style: TextStyle(color: AppColors.additional),
                 ),
         ),
-        backgroundColor: AppColors.transparent,
-        shadowColor: AppColors.transparent,
         leading: const BackButton(
           color: AppColors.secondary,
         ),

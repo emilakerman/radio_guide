@@ -58,10 +58,7 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
       appBar: AppBar(
         title: const Text(
           "Tablå",
-          style: TextStyle(color: AppColors.additional),
         ),
-        backgroundColor: AppColors.transparent,
-        shadowColor: AppColors.transparent,
         leading: const BackButton(
           color: AppColors.secondary,
         ),
