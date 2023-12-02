@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'sr_api_services.g.dart';
 
 class ApiServices {
   Dio dio = Dio();
@@ -84,4 +87,9 @@ class ApiServices {
     }
     return null;
   }
+}
+
+@riverpod
+ApiServices apiService(ApiServiceRef ref) {
+  return ApiServices();
 }

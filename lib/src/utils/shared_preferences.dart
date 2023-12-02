@@ -1,6 +1,8 @@
 import 'dart:convert';
-
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+part 'shared_preferences.g.dart';
 
 class LocallyStoredData {
   final String key = 'channels';
@@ -37,4 +39,9 @@ class LocallyStoredData {
 
     await prefs.setStringList(key, savedChannels);
   }
+}
+
+@riverpod
+LocallyStoredData localStorage(LocalStorageRef ref) {
+  return LocallyStoredData();
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:radio_guide/src/constants/app_colors.dart';
 import 'package:radio_guide/src/constants/fallbacks.dart';
 import 'package:radio_guide/src/features/channel_list/data/sr_api_services.dart';
 import 'package:radio_guide/src/common_widgets/circular_progress_widget.dart';
 import 'package:radio_guide/src/common_widgets/floating_action_buttons.dart';
+import 'package:radio_guide/src/utils/calculate_difference.dart';
+import 'package:radio_guide/src/utils/extract_time.dart';
 
 class ListOfProgramsScreen extends StatefulWidget {
   const ListOfProgramsScreen({super.key, required this.channel});
@@ -20,6 +23,7 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
 
   @override
   void initState() {
+    super.initState();
     fetchData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -27,7 +31,6 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
         fetchNextDayAndCombine();
       }
     });
-    super.initState();
   }
 
   void fetchNextDayAndCombine() async {
@@ -45,24 +48,6 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
       programs = list;
       _isLoading = false;
     });
-  }
-
-  String? extractTime(String timeStamp) {
-    final RegExp regex = RegExp(r'\d+');
-    final match = regex.firstMatch(timeStamp);
-
-    if (match != null) {
-      final numberString = match.group(0);
-      final number = int.tryParse(numberString!);
-
-      if (number != null) {
-        final dateTime =
-            DateTime.fromMillisecondsSinceEpoch(number, isUtc: true);
-
-        return '${dateTime.toLocal().hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-      }
-    }
-    return null;
   }
 
   final ScrollController _scrollController = ScrollController();
@@ -133,41 +118,11 @@ class _ListOfProgramsScreenState extends State<ListOfProgramsScreen> {
 
   Widget _buildTimeText({required int index, required String startOrEnd}) {
     return Text(
-      [extractTime(programs?[index][startOrEnd])]
-          .toString()
-          .replaceAll(RegExp(r'[\[\]]'), ''),
+      [
+        extractTime(
+          programs?[index][startOrEnd],
+        ),
+      ].toString().replaceAll(RegExp(r'[\[\]]'), ''),
     );
   }
-}
-
-String calculateDifference({required String? start, required String? end}) {
-  String? startTime = start;
-  String? endTime = end;
-
-  Duration startDuration = parseTime(startTime!);
-  Duration endDuration = parseTime(endTime!);
-
-  Duration difference = endDuration - startDuration;
-
-  String differenceString = formatDuration(difference);
-
-  return differenceString;
-}
-
-Duration parseTime(String timeStr) {
-  List<int> parts = timeStr.split(':').map(int.parse).toList();
-  return Duration(hours: parts[0], minutes: parts[1]);
-}
-
-String formatDuration(Duration duration) {
-  if (duration.inMinutes == 0) {
-    return "0 minuter";
-  }
-
-  String hours = duration.inHours > 0 ? '${duration.inHours} timmar ' : '';
-  String minutes = duration.inMinutes.remainder(60) > 0
-      ? '${duration.inMinutes.remainder(60)} minuter'
-      : '';
-
-  return '$hours$minutes';
 }
