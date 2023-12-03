@@ -61,6 +61,7 @@ class StartPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () => context.goNamed(AppRoutes.channels.name),
                 style: ElevatedButton.styleFrom(
+                  foregroundColor: AppColors.white,
                   backgroundColor: AppColors.additional,
                   elevation: 4,
                   shadowColor: AppColors.black,
@@ -80,8 +81,7 @@ class StartPage extends StatelessWidget {
       builder: (_, ref, __) {
         Widget buildRandomStarIcon() {
           return _buildStarIcon(
-            color:
-                ref.read(startPageControllerProvider.notifier).randomizeColor(),
+            color: ref.read(startPageControllerProvider.notifier).randomizeColor(),
           );
         }
 
